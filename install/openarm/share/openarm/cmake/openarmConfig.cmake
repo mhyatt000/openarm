@@ -1,1 +1,1 @@
-/home/pi/robot_ws/build/openarm/ament_cmake_core/openarmConfig.cmake
+/home/pi/cs/openarm/build/openarm/ament_cmake_core/openarmConfig.cmake
