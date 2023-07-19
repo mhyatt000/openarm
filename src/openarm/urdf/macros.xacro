@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<robot name="ar3" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="link" params="name inertial_origin inertial_mass inertial_inertia visual_geometry collision_geometry">
+    <link name="${name}">
+      <inertial>
+        <origin rpy="0 0 0" xyz="${inertial_origin}"/>
+        <mass value="${inertial_mass}"/>
+        <inertia ixx="${inertial_inertia[0]}" ixy="${inertial_inertia[1]}" ixz="${inertial_inertia[2]}" iyy="${inertial_inertia[3]}" iyz="${inertial_inertia[4]}" izz="${inertial_inertia[5]}"/>
+      </inertial>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="${visual_geometry}"/>
+        </geometry>
+        <material name="">
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="${collision_geometry}"/>
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="revolute_joint" params="name origin parent child axis limit_lower limit_upper">
+    <joint name="${name}" type="revolute">
+      <origin rpy="${origin[0]} ${origin[1]} ${origin[2]}" xyz="${origin[3]} ${origin[4]} ${origin[5]}"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+      <axis xyz="${axis}"/>
+      <limit lower="${limit_lower}" upper="${limit_upper}" effort="0" velocity="0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:property name="pi" value="3.1415926535897931"/>
+  
+  <xacro:macro name="common_link" params="name mass xyz rpy ixx ixy ixz iyy iyz izz stl_file color_rgba">
+    <link name="${name}">
+      <inertial>
+        <origin rpy="${rpy}" xyz="${xyz}"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${ixx}" ixy="${ixy}" ixz="${ixz}" iyy="${iyy}" iyz="${iyz}" izz="${izz}"/>
+      </inertial>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ar3_description/meshes/${stl_file}"/>
+        </geometry>
+        <material name="">
+          <color rgba="${color_rgba}"/>
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ar3_description/meshes/${stl_file}"/>
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="revolute_joint" params="name rpy xyz parent child axis lower upper effort velocity">
+    <joint name="${name}" type="revolute">
+      <origin rpy="${rpy}" xyz="${xyz}"/>
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+      <axis xyz="${axis}"/>
+      <limit lower="${lower}" upper="${upper}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Define links using the macro -->
+  <xacro:common_link name="base_link" mass="0.7102" xyz="-4.6941E-06 0.054174 0.038824" rpy="0 0 0" 
+                     ixx="0.0039943" ixy="3.697E-07" ixz="-5.7364E-08" iyy="0.0014946" iyz="-0.00036051" izz="0.0042554" 
+                     stl_file="base_link.STL" color_rgba="1 1 0 1"/>
+
+  <!-- Define joints using the macro -->
+  <xacro:revolute_joint name="joint_1" rpy="${pi} 0 0" xyz="0 0 0.003445" parent="base_link" child="link_1" axis="0 0 1" 
+                        lower="-2.96706" upper="2.96706" effort="0" velocity="0"/>
+
+  <!-- Continue the pattern for other links and joints -->
+  <!-- ... -->
+
+</robot>

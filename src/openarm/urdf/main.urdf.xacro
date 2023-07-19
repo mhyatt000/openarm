@@ -1,6 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
-<robot name="ar3">
+<?xml version="1.0"?>
+<robot name="ar3" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <xacro:include filename="macros.xacro" />
+
+  <xacro:macro name="body" params="name x y z u v w">
+
+    <link name="${name}_link">
+
+      <!--
+      <inertial>
+        <origin rpy="0 0 0" xyz="-4.6941E-06 0.054174 0.038824"/>
+        <mass value="0.7102"/>
+        <inertia ixx="0.0039943" ixy="3.697E-07" ixz="-5.7364E-08" iyy="0.0014946" iyz="-0.00036051" izz="0.0042554"/>
+      </inertial>
+      -->
+
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry> <mesh filename="meshes/${name}.stl"/> </geometry>
+        <material name="my_material">
+          <color rgba="${arg material_color}"/>
+        </material>
+      </visual>
+
+      <collision>
+          <!-- <origin rpy="${u} ${v} ${w}" xyz="${x} ${y} ${z}"/> -->
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ar3_description/meshes/base_link.STL"/>
+        </geometry>
+      </collision>
+
+    </link>
+  </xacro:macro>
+
+  <xacro:property name="my_list" value="value1, value2, value3" />
+
+  <xacro:macro name="process_list">
+    <xacro:foreach item="item" list="$(my_list)">
+      <!-- Process each item in the list here -->
+      <xacro:insert_block name="do_something_with_item">
+        <xacro:arg name="item" value="$(item)" />
+      </xacro:insert_block>
+    </xacro:foreach>
+  </xacro:macro>
+
+  <xacro:macro name="get_limit" params="item">
+    <!-- Define how to process each item here -->
+    <!-- Access the item using $(item) -->
+    <!-- Rest of the code -->
+  </xacro:macro>
+
+
+  <xacro:macro name="rev" params="child parent">
+
+    <joint name="${child}" type="revolute">
+      <origin rpy="${pi} 0 0" xyz="0 0 0.003445"/>
+      <parent link="${child}_link"/>
+      <child link="${parent}_link"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.96706" upper="2.96706" effort="0" velocity="0"/>
+    </joint>
+
+  </xacro:macro>
+
+  <xacro:body name="base"/>
+  <xacro:body name="j1"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+  <xacro:body name="j2"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+  <xacro:body name="j3"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+  <xacro:body name="j4"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+  <xacro:body name="j5"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+  <xacro:body name="j6"/> <!-- x="0" y="0" z="0" u="0" v="0" w="0"/> -->
+
+  <xacro:rev child="j1" parent="base"/>
+  <xacro:rev child="j2" parent="j1"/>
+  <xacro:rev child="j3" parent="j2"/>
+  <xacro:rev child="j4" parent="j3"/>
+  <xacro:rev child="j5" parent="j4"/>
+  <xacro:rev child="j6" parent="j5"/>
 
 </robot>
-
